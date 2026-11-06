@@ -159,7 +159,9 @@ int main(int argc, char** argv) {
     scan_results = {ap(1, 6)}; next_scan = scan_results; SelectedVector = {0};
     startAutoSingleAttack(); processAutoSingleAttack();
     now_ms += SCAN_INTERVAL; processAutoSingleAttack();
-    return !check(sends == 2 && sent_bssid == 1 && sent_channel == 6, "AutoSingle did not restore the target channel after the simulated scan");
+    if (!check(sends == 2, "AutoSingle did not transmit twice across the simulated scan")) return 1;
+    if (!check(sent_bssid == 1, "AutoSingle used an unexpected BSSID after the simulated scan")) return 1;
+    return !check(sent_channel == 6, "AutoSingle did not restore the target channel after the simulated scan");
   }
   std::cerr << "Unknown scenario\n"; return 2;
 }
